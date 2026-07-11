@@ -11,7 +11,6 @@ A fast, dependency-free personal portfolio site. Plain HTML/CSS/JS — no build 
 | `index.html` | All content and structure |
 | `styles.css` | Styling, dark/light themes, responsive layout |
 | `script.js` | Theme toggle, scroll reveal, animated counters |
-| `.github/workflows/deploy.yml` | Auto-deploy to GitHub Pages on push to `main` |
 | `.nojekyll` | Tells Pages to serve files as-is (skip Jekyll) |
 
 ## Deploy in 4 steps
@@ -30,13 +29,11 @@ A fast, dependency-free personal portfolio site. Plain HTML/CSS/JS — no build 
    git push -u origin main
    ```
 
-3. **Enable Pages:** Repo → **Settings → Pages → Build and deployment → Source: GitHub Actions.**
-   The included workflow then deploys automatically on every push to `main`.
+3. **Enable Pages:** Repo → **Settings → Pages → Build and deployment →
+   Source: Deploy from a branch → `main` / `/ (root)`.**
+   Pages rebuilds automatically on every push to `main` (the `.nojekyll` file serves files as-is).
 
-4. Wait ~1 minute for the **Deploy to GitHub Pages** action to finish, then open your site.
-
-> Prefer the simple route? You can instead set **Source: Deploy from a branch → `main` / root**
-> and skip the Actions workflow entirely — the `.nojekyll` file makes that work too.
+4. Wait ~1 minute for the first build, then open your site.
 
 ## Editing content
 
