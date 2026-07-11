@@ -54,6 +54,9 @@
       if (!e.isIntersecting) return;
       const el = e.target;
       const target = parseFloat(el.dataset.count);
+      // Only animate tiles that declare a numeric data-count; leave literal
+      // values (e.g. "80%+", "958M", "GPT-4") untouched so they never show NaN.
+      if (Number.isNaN(target)) { io.unobserve(el); return; }
       const suffix = el.dataset.suffix || '';
       const dur = 1400;
       const start = performance.now();

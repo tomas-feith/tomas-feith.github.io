@@ -48,7 +48,7 @@
           <h1 class="hero__name">Tomás Feith</h1>
           <p class="hero__tagline">
             I build and train large language models that ship to production — from a novel
-            <span class="hl">DeepL Write</span> overhaul with 80%+ win-rates, to
+            <span class="hl">DeepL Write</span> overhaul, to
             <span class="hl">multilingual NLP</span> research at EPFL &amp; Wikimedia, to
             <span class="hl">6 US patents</span> on code-aware LLMs at Oracle Labs.
           </p>
@@ -73,14 +73,6 @@
         </div>
       </div>
       <div class="hero__scroll">scroll ↓</div>
-    </section>
-
-    <!-- Stats -->
-    <section class="stats reveal">
-      <div class="stat"><span class="stat__num" data-count="80" data-suffix="%+">0</span><span class="stat__label">Write win-rate vs. all competitors</span></div>
-      <div class="stat"><span class="stat__num" data-count="6" data-suffix="">0</span><span class="stat__label">US patents filed in 6 months</span></div>
-      <div class="stat"><span class="stat__num" data-count="958" data-suffix="M">0</span><span class="stat__label">Link multilingual benchmark</span></div>
-      <div class="stat"><span class="stat__num" data-count="1000" data-suffix="+">0</span><span class="stat__label">GPUs used in distillation</span></div>
     </section>
 
     <!-- About -->
@@ -115,8 +107,7 @@
             <li>Distillation &amp; Synthetic Data</li>
             <li>Multilingual NLP</li>
             <li>Information Retrieval</li>
-            <li>LLM/VLM Pipelines</li>
-            <li>Evaluation &amp; LLM-as-Judge</li>
+            <li>Evaluation</li>
           </ul>
           <h3>Toolbox</h3>
           <div class="skills-grid">
@@ -141,9 +132,9 @@
           <div class="tl__body">
             <h3>Senior Research Scientist <span class="tl__org">· DeepL</span></h3>
             <ul>
-              <li>Led the <strong>DeepL Write overhaul</strong> across all languages, shipping models with <strong>80%+ win-rate</strong> over every dedicated competitor and parity with GPT-4-class LLMs on internal preference evals — combining a novel SFT loss for edit-aggressiveness with distillation on <strong>1k+ GPUs</strong>.</li>
-              <li>Launched <strong>3 new Write languages</strong> (JA / ZH / KO) end-to-end, unlocking 3 new key markets, owning reward-model training, SFT, evaluation, and production rollout.</li>
-              <li>Built a multi-stage <strong>LLM/VLM pipeline</strong> for PowerPoint translation, robustly handling heterogeneous slide layouts in production.</li>
+              <li>Led the <strong>DeepL Write overhaul</strong> across all languages, shipping models that win the majority of head-to-head comparisons against every dedicated competitor and reach parity with GPT-4-class LLMs on internal preference evals.</li>
+              <li>Launched <strong>3 new Write languages</strong> (JA / ZH / KO) end-to-end, unlocking 3 new key markets, owning SFT, evaluation, and production rollout.</li>
+              <li>Built a multi-stage <strong>pipeline</strong> for PowerPoint translation, robustly handling heterogeneous slide layouts in production.</li>
               <li>Shipped a document-translation <strong>evaluation framework</strong> (LLM-as-judge) that cut eval turnaround from days to hours.</li>
             </ul>
           </div>
@@ -183,6 +174,18 @@
             <ul>
               <li>Designed a novel <strong>3D-CNN</strong> for light-field denoising, published as <a href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/12571/1257109/Towards-learning-based-denoising-of-light-fields/10.1117/12.2666000.short" target="_blank" rel="noopener">SPIE 2023</a>, fusing multi-view information across the camera grid.</li>
               <li>Rewrote the patch-matching core from Python to <strong>C++</strong> with custom heuristics for a substantial end-to-end speedup.</li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="tl reveal">
+          <div class="tl__dot"></div>
+          <div class="tl__meta"><span class="tl__date">Feb 2022 — Jun 2022</span><span class="tl__loc">Lausanne, CH</span></div>
+          <div class="tl__body">
+            <h3>Student Researcher <span class="tl__org">· EPFL LTS5</span></h3>
+            <ul>
+              <li>Proposed a <strong>label-free object-discovery</strong> method that clusters self-supervised ViT (DINO) attention into foreground/background one image at a time — scaling to any dataset size — reaching <a href="projects/object-discovery.html">CorLoc 54.9 / 55.1 / 51.0</a> on VOC07 / VOC12 / COCO20k.</li>
+              <li>Benchmarked against LOST and TokenCut and introduced heuristics (non-uniform token sampling, colour injection, weighted attention masks) that measurably improved localisation.</li>
             </ul>
           </div>
         </li>
@@ -234,46 +237,39 @@
         <h2 class="section__title">Selected Projects</h2>
       </div>
       <div class="projects" id="projectsGrid">
-        <a class="card reveal" href="https://github.com/tomas-feith/LightField_Denoising" target="_blank" rel="noopener">
-          <div class="card__top"><span class="card__lang cpp">C++</span><span class="card__arrow">↗</span></div>
-          <h3>LightField Denoising</h3>
-          <p>Noise generation &amp; denoising pipeline for light fields — AWGN and realistic noise with Wavelet, BM3D, LFBM5D, DnCNN &amp; LFDnPatch, backing the SPIE 2023 paper.</p>
-          <div class="card__tags"><span>Denoising</span><span>Light Field</span><span>Benchmark</span></div>
+        <a class="card reveal" href="projects/deepl.html">
+          <div class="card__top"><span class="card__lang industry">Industry · LLMs</span><span class="card__arrow">→</span></div>
+          <h3>Research &amp; LLM Dev at DeepL</h3>
+          <p>Training and shipping LLMs for text improvement and translation — the DeepL Write overhaul, three new languages, and document-translation pipelines &amp; evaluation.</p>
+          <div class="card__tags"><span>SFT / RLHF</span><span>Distillation</span><span>Evaluation</span></div>
         </a>
 
-        <a class="card reveal" href="https://github.com/tomas-feith/LEGO-Finder" target="_blank" rel="noopener">
-          <div class="card__top"><span class="card__lang py">Python</span><span class="card__arrow">↗</span></div>
-          <h3>LEGO-Finder</h3>
-          <p>Large-scale synthetic-data pipeline (Unity Perception) + YOLOv4 to detect 10 LEGO bricks — 98% mAP on synthetic data, studying the sim-to-real gap.</p>
-          <div class="card__tags"><span>YOLOv4</span><span>Synthetic Data</span><span>Object Detection</span></div>
+        <a class="card reveal" href="projects/thesis.html">
+          <div class="card__top"><span class="card__lang research">Research · EMNLP 2024</span><span class="card__arrow">→</span></div>
+          <h3>Multilingual Entity Insertion</h3>
+          <p>Master's thesis with EPFL DLAB &amp; Wikimedia — formalised the entity-insertion task, built a 958M-link benchmark over 105 languages, and trained xLocEI to nearly double GPT-4 on hits@1.</p>
+          <div class="card__tags"><span>Multilingual NLP</span><span>Retrieval</span><span>Transformers</span></div>
         </a>
 
-        <a class="card reveal" href="https://github.com/tomas-feith/Image-Processing" target="_blank" rel="noopener">
-          <div class="card__top"><span class="card__lang cpp">C++</span><span class="card__arrow">↗</span></div>
-          <h3>Image Processing Suite</h3>
-          <p>C++ image-processing library — denoising, contour detection, intensity histograms &amp; Fourier frequency filtering, with OpenCV/Eigen, GoogleTest &amp; Doxygen docs.</p>
-          <div class="card__tags"><span>OpenCV</span><span>Eigen</span><span>Fourier</span></div>
+        <a class="card reveal" href="projects/object-discovery.html">
+          <div class="card__top"><span class="card__lang research">Research · MSc</span><span class="card__arrow">→</span></div>
+          <h3>Object Discovery with No Labels</h3>
+          <p>Label-free object discovery from self-supervised ViT (DINO) attention — clusters tokens into foreground/background one image at a time. CorLoc 54.9 / 55.1 / 51.0 on VOC07 / VOC12 / COCO20k.</p>
+          <div class="card__tags"><span>Vision Transformer</span><span>Self-Supervised</span><span>Clustering</span></div>
         </a>
 
-        <a class="card reveal" href="https://github.com/tomas-feith/CHIMERA" target="_blank" rel="noopener">
-          <div class="card__top"><span class="card__lang py">Python</span><span class="card__arrow">↗</span></div>
+        <a class="card reveal" href="projects/light-field.html">
+          <div class="card__top"><span class="card__lang research">Research · SPIE 2023</span><span class="card__arrow">→</span></div>
+          <h3>Light Field Denoising &amp; LF-PatchMatch</h3>
+          <p>A novel learning-based light-field denoiser (LFDnPatch) built on a fast C++ PatchMatch core, benchmarked against BM3D, LFBM5D &amp; DnCNN over a 492-scene dataset. Basis for the SPIE 2023 paper.</p>
+          <div class="card__tags"><span>DnCNN</span><span>C++ / PyTorch</span><span>Benchmark</span></div>
+        </a>
+
+        <a class="card reveal" href="projects/chimera.html">
+          <div class="card__top"><span class="card__lang py">Python · Tool</span><span class="card__arrow">→</span></div>
           <h3>CHIMERA</h3>
-          <p>A GUI tool that simplifies plotting, curve-fitting and analysing scientific data — producing publication-quality results and cutting data-processing time by 50%+.</p>
-          <div class="card__tags"><span>Tkinter</span><span>Matplotlib</span><span>Curve Fitting</span></div>
-        </a>
-
-        <a class="card reveal" href="https://github.com/tomas-feith/deeplearning_project" target="_blank" rel="noopener">
-          <div class="card__top"><span class="card__lang py">Python</span><span class="card__arrow">↗</span></div>
-          <h3>Deep Learning Framework</h3>
-          <p>EPFL Deep Learning coursework — building neural-network building blocks and training pipelines from scratch and with PyTorch.</p>
-          <div class="card__tags"><span>PyTorch</span><span>From Scratch</span></div>
-        </a>
-
-        <a class="card reveal" href="https://github.com/tomas-feith/LF-PatchMatch" target="_blank" rel="noopener">
-          <div class="card__top"><span class="card__lang cpp">C++</span><span class="card__arrow">↗</span></div>
-          <h3>LF-PatchMatch</h3>
-          <p>High-performance C++ patch-matching core for light-field processing, rewritten from Python with custom heuristics for a large end-to-end speedup.</p>
-          <div class="card__tags"><span>C++</span><span>Optimization</span></div>
+          <p>A cross-platform desktop app that simplifies plotting, curve-fitting and analysing scientific data — orthogonal-distance regression, publication-quality output, packaged for Windows &amp; Linux.</p>
+          <div class="card__tags"><span>Tkinter</span><span>SciPy ODR</span><span>Matplotlib</span></div>
         </a>
       </div>
       <p class="projects__more reveal">More on <a href="https://github.com/tomas-feith" target="_blank" rel="noopener">github.com/tomas-feith ↗</a></p>

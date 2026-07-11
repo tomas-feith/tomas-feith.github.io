@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Light Field Denoising &amp; LF-PatchMatch — Tomás Feith</title>
+  <meta name="description" content="A learning-based light-field denoiser (LFDnPatch) built on a fast C++ PatchMatch core, benchmarked against BM3D, LFBM5D and DnCNN over a 492-scene dataset. Basis for the SPIE 2023 paper." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AC%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <header class="nav" id="nav">
+    <a href="../index.html#top" class="nav__brand">TF<span>.</span></a>
+    <nav class="nav__links">
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#experience">Experience</a>
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+      <svg class="theme-toggle__sun" viewBox="0 0 24 24" width="18" height="18"><path d="M12 17a5 5 0 100-10 5 5 0 000 10zM12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+      <svg class="theme-toggle__moon" viewBox="0 0 24 24" width="18" height="18"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <main class="proj">
+    <a href="../index.html#projects" class="proj__back">← All projects</a>
+    <div class="proj__meta">
+      <span>MSc Semester Project</span><span class="sep">•</span>
+      <span>EPFL — Multimedia Signal Processing Group</span><span class="sep">•</span>
+      <span>Fall 2022</span>
+    </div>
+    <h1>Light Field Denoising &amp; LF-PatchMatch</h1>
+    <p class="proj__lede">A novel learning-based light-field denoiser that exploits the redundancy between views — powered by a fast, hand-optimised C++ PatchMatch core. The work behind my SPIE 2023 paper.</p>
+    <div class="proj__links">
+      <a class="btn btn--primary" href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/12571/1257109/Towards-learning-based-denoising-of-light-fields/10.1117/12.2666000.short" target="_blank" rel="noopener">SPIE 2023 paper ↗</a>
+      <a class="btn btn--ghost" href="https://github.com/tomas-feith/LightField_Denoising" target="_blank" rel="noopener">LightField_Denoising ↗</a>
+      <a class="btn btn--ghost" href="https://github.com/tomas-feith/LF-PatchMatch" target="_blank" rel="noopener">LF-PatchMatch ↗</a>
+    </div>
+
+    <div class="proj__body">
+      <h2>Background</h2>
+      <p>A light field captures a scene as a grid of slightly-shifted views (sub-aperture images, or SAIs) — the same scene seen from many nearby viewpoints. That redundancy is exactly what standard image denoisers throw away. The goal of this project was to build a denoiser that <strong>uses the neighbouring views</strong> to clean up each one, and to benchmark it rigorously against the best classical and learning-based methods.</p>
+      <p>I first assembled a large, diverse dataset — <strong>492 scenes / 28,604 images</strong> from seven public light-field archives — and a noise generator supporting both additive white Gaussian noise and a realistic Poissonian–Gaussian smartphone-sensor model.</p>
+
+      <h2>The core idea: stitch-patched views</h2>
+      <p>Naively stacking neighbouring SAIs fails because of parallax — objects shift between views, so a CNN's small receptive field can't line them up. Instead, for each view I build several <strong>"stitch-patched"</strong> versions: reconstructions of the target view assembled from the most-similar patches found in the other views. These are locally aligned to the target, so a DnCNN-style network can finally exploit cross-view redundancy. This became <strong>LFDnPatch</strong>.</p>
+
+      <figure class="proj__fig">
+        <img src="../assets/projects/lf_stitch.jpg" alt="Stitch-patched reconstruction next to the original image, for two scenes" loading="lazy" />
+        <figcaption>Stitch-patched reconstructions vs. originals. Top: a wide-baseline scene where large parallax causes visible block artifacts. Bottom: a narrow-baseline scene where patches fit almost seamlessly.</figcaption>
+      </figure>
+
+      <h2>LF-PatchMatch: making it fast in C++</h2>
+      <p>Patch matching across a full SAI grid is brutally expensive — a naïve search is <span class="mono-inline">O(H²·W²·G<sub>H</sub>²·G<sub>W</sub>²)</span>. I implemented the matcher in <strong>C++</strong> and exploited the geometry of the light-field grid to cut that down dramatically:</p>
+      <ul>
+        <li><strong>1-D disparity search</strong> — views in the same row differ only horizontally (and columns only vertically), so the 2-D search collapses to 1-D.</li>
+        <li><strong>Sliding search window</strong> — since disparity between neighbours is small, only a narrow region around the previous match needs checking.</li>
+      </ul>
+      <p>Together these reduce the complexity to <span class="mono-inline">O(G<sub>H</sub>·G<sub>W</sub>·H·W·S·(G<sub>H</sub>+G<sub>W</sub>))</span> — a speedup that grows with scene size and made training on the full dataset feasible.</p>
+
+      <figure class="proj__fig">
+        <img src="../assets/projects/lf_patchmatch.png" alt="Diagram of the 1-D sliding-window patch search across a row of views" loading="lazy" />
+        <figcaption>The heuristic search: matches for a patch are found by sliding a small window (brown) along a row of neighbouring views, rather than searching every view exhaustively.</figcaption>
+      </figure>
+
+      <h2>Benchmark</h2>
+      <p>All methods were evaluated with PSNR and SSIM across noise types and strengths. Aggregated PSNR under additive white Gaussian noise:</p>
+      <div style="overflow-x:auto;">
+        <table class="proj__table">
+          <thead><tr><th>Method</th><th>Soft (σ=6)</th><th>Medium (σ=15)</th><th>Hard (σ=23)</th></tr></thead>
+          <tbody>
+            <tr><td>Wavelets</td><td>35.4</td><td>31.6</td><td>29.8</td></tr>
+            <tr><td>BM3D</td><td>40.4</td><td>35.6</td><td>33.4</td></tr>
+            <tr><td><strong>LFBM5D</strong> (light-field)</td><td><strong>41.0</strong></td><td><strong>36.6</strong></td><td><strong>34.2</strong></td></tr>
+            <tr><td>DnCNN</td><td>39.2</td><td>35.4</td><td>33.4</td></tr>
+            <tr><td>LFDnPatch (ours)</td><td>37.9</td><td>34.3</td><td>32.5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:14px;color:var(--faint);">PSNR in dB, averaged over the test scenes. The light-field-aware LFBM5D wins overall, confirming that cross-view redundancy is real and exploitable.</p>
+
+      <figure class="proj__triptych">
+        <figure><img src="../assets/projects/lf_pens_clean.png" alt="Clean reference patch" loading="lazy" /><figcaption>Clean reference</figcaption></figure>
+        <figure><img src="../assets/projects/lf_pens_bm3d.png" alt="BM3D denoised patch" loading="lazy" /><figcaption>BM3D</figcaption></figure>
+        <figure><img src="../assets/projects/lf_pens_dncnn.png" alt="DnCNN denoised patch" loading="lazy" /><figcaption>DnCNN</figcaption></figure>
+      </figure>
+
+      <h2>Takeaways</h2>
+      <ul>
+        <li>Light-field-specific methods clearly beat their single-image counterparts — <strong>except</strong> under wide angular spacing, where occlusions break cross-view redundancy.</li>
+        <li>LFDnPatch, though below DnCNN, consistently beat wavelets and sometimes BM3D — a promising first learning-based light-field denoiser with clear paths to improve.</li>
+        <li>The work was published as <a href="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/12571/1257109/Towards-learning-based-denoising-of-light-fields/10.1117/12.2666000.short" target="_blank" rel="noopener"><em>Towards Learning-Based Denoising of Light Fields</em></a> at SPIE 2023.</li>
+      </ul>
+
+      <h2>Stack &amp; methods</h2>
+      <div class="proj__stack">
+        <span>C++</span><span>PyTorch</span><span>DnCNN</span><span>PatchMatch</span><span>BM3D / LFBM5D</span><span>PSNR / SSIM</span><span>Multi-GPU Training</span>
+      </div>
+      <p style="margin-top:24px;font-size:14.5px;color:var(--muted);">Supervised by Michela Testolina and Prof. Touradj Ebrahimi (EPFL MMSPG). Model trained on 2 GPUs over ~4 days.</p>
+
+      <div class="proj__nav">
+        <a href="object-discovery.html">← Object Discovery with No Labels</a>
+        <a href="chimera.html">CHIMERA →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>© <span id="year"></span> Tomás Feith</span>
+    <span class="footer__built"><a href="../index.html">← Back to portfolio</a></span>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

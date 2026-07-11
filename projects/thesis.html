@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multilingual Entity Insertion — Tomás Feith</title>
+  <meta name="description" content="Master's thesis at EPFL DLAB & Wikimedia: formalising entity insertion, a 958M-link benchmark over 105 Wikipedia languages, and xLocEI — nearly doubling GPT-4 on hits@1. EMNLP 2024." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AC%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <header class="nav" id="nav">
+    <a href="../index.html#top" class="nav__brand">TF<span>.</span></a>
+    <nav class="nav__links">
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#experience">Experience</a>
+      <a href="../index.html#research">Research</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+      <svg class="theme-toggle__sun" viewBox="0 0 24 24" width="18" height="18"><path d="M12 17a5 5 0 100-10 5 5 0 000 10zM12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+      <svg class="theme-toggle__moon" viewBox="0 0 24 24" width="18" height="18"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <main class="proj">
+    <a href="../index.html#projects" class="proj__back">← All projects</a>
+    <div class="proj__meta">
+      <span>Master's Thesis</span><span class="sep">•</span>
+      <span>EPFL Data Science Lab (DLAB) × Wikimedia Foundation</span><span class="sep">•</span>
+      <span>Sep 2023 – Feb 2024</span>
+    </div>
+    <h1>Multilingual Entity Insertion in Wikipedia</h1>
+    <p class="proj__lede">Formalising a new information-retrieval task — <em>where</em> to insert a link to a given entity in a text — and solving it across 105 languages with a small encoder that nearly doubles GPT-4.</p>
+    <div class="proj__links">
+      <a class="btn btn--primary" href="https://aclanthology.org/2024.emnlp-main.1268/" target="_blank" rel="noopener">Read the EMNLP 2024 paper ↗</a>
+      <a class="btn btn--ghost" href="https://github.com/epfl-dlab/multilingual-entity-insertion" target="_blank" rel="noopener">Code &amp; dataset ↗</a>
+      <a class="btn btn--ghost" href="https://arxiv.org/abs/2410.04254" target="_blank" rel="noopener">arXiv ↗</a>
+    </div>
+
+    <div class="proj__body">
+      <div class="stats" style="margin: 0 0 8px; padding: 0;">
+        <div class="stat"><span class="stat__num">958M</span><span class="stat__label">Links in the benchmark</span></div>
+        <div class="stat"><span class="stat__num">105</span><span class="stat__label">Wikipedia languages</span></div>
+        <div class="stat"><span class="stat__num">0.73</span><span class="stat__label">xLocEI hits@1 (vs 0.37 GPT-4)</span></div>
+        <div class="stat"><span class="stat__num">~2×</span><span class="stat__label">Improvement over prior SotA</span></div>
+      </div>
+
+      <h2>The problem</h2>
+      <p>Wikipedia's value comes in large part from its dense web of internal links, but adding them is slow, manual work — and the gap is worst in under-resourced languages. We reframed this as <strong>entity insertion</strong>: given a target entity and a source article, find the exact span of text where a link to that entity should be placed. It's a retrieval problem, but one that has to reason about local context rather than whole-document relevance.</p>
+
+      <h2>A 958M-link, 105-language benchmark</h2>
+      <p>Working with the <strong>Wikimedia Foundation</strong>, I built the first large-scale multilingual benchmark for the task by scraping the full Wikipedia and engineering a deduplication and filtering pipeline that turns raw dumps into clean (context, target) training pairs. The result spans <strong>958M links across 105 languages</strong>, from the highest-resourced down to the long tail — and is fully open-sourced.</p>
+
+      <h2>xLocEI — a small model that beats GPT-4</h2>
+      <p>Rather than prompt a large LLM, I fine-tuned an <strong>XLM-RoBERTa-base</strong> encoder (<em>xLocEI</em>) directly on the benchmark. Evaluated macro-averaged over 20 languages, it nearly <strong>doubles GPT-4's hits@1</strong> at a small fraction of the inference cost, and it generalises zero-shot to languages unseen during training.</p>
+
+      <div style="overflow-x:auto;">
+        <table class="proj__table">
+          <thead><tr><th>Method</th><th>Macro-avg hits@1 (20 languages)</th></tr></thead>
+          <tbody>
+            <tr><td>GPT-4 &mdash; prompt-based ranking (prior SotA)</td><td>0.37</td></tr>
+            <tr><td><strong>xLocEI (ours)</strong></td><td><strong>0.73</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:14px;color:var(--faint);">Classical baselines (BM25 lexical retrieval and dense retrieval) were also benchmarked to quantify the gap between traditional IR and the learning-based approach.</p>
+
+      <h2>Outcome</h2>
+      <ul>
+        <li>First-author paper at <a href="https://aclanthology.org/2024.emnlp-main.1268/" target="_blank" rel="noopener">EMNLP 2024</a> (main conference).</li>
+        <li>Recommended for the <strong>EPFL Best Master's Thesis Award</strong>.</li>
+        <li>Code, models, and the full benchmark released open-source for the community.</li>
+      </ul>
+
+      <h2>Stack &amp; methods</h2>
+      <div class="proj__stack">
+        <span>PyTorch</span><span>HuggingFace</span><span>XLM-RoBERTa</span><span>Information Retrieval</span><span>BM25 / Dense Retrieval</span><span>Multilingual NLP</span><span>Large-scale Data Pipelines</span>
+      </div>
+
+      <p style="margin-top:24px;font-size:14.5px;color:var(--muted);">Advised by Dr. Akhil Arora and supervised by Prof. Robert West (EPFL DLAB), in collaboration with Martin Gerlach and Debjit Paul.</p>
+
+      <div class="proj__nav">
+        <a href="deepl.html">← Research &amp; LLM Dev at DeepL</a>
+        <a href="object-discovery.html">Object Discovery with No Labels →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>© <span id="year"></span> Tomás Feith</span>
+    <span class="footer__built"><a href="../index.html">← Back to portfolio</a></span>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>
